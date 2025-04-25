@@ -53,22 +53,15 @@ class DecisionTree {
     for (const attribute of this.attributeNames) {
 
       let allNumeric = true
-      const uniqueValues = new Set()
 
       for (const row of this.trainingData) {
         const value = row[attribute]
-        uniqueValues.add(value)
-
-        if (isNaN(Number(value)) && value !== "NaN" && value !== "") {
+        if (isNaN(Number(value))) {
           allNumeric = false
           break
         }
       }
 
-      const uniqueRatio = uniqueValues.size / this.trainingData.length
-      if (!allNumeric || uniqueRatio < 0.05) {
-        this.categoricalAttributes[attribute] = true
-      }
     }
   }
 
@@ -467,23 +460,6 @@ function parseCSV(csvText) {
   return result
 }
 
-function createHierarchy(data, getChildren) {
-  function processNode(node) {
-    if (!node) return null
-
-    const children = getChildren(node)
-    if (!children || children.length === 0) {
-      return { ...node }
-    }
-
-    return {
-      ...node,
-      children: children.map((child) => processNode(child)).filter(Boolean),
-    }
-  }
-
-  return processNode(data)
-}
 
 function visualizeTree(data, targetColumnName) {
 
@@ -511,10 +487,9 @@ function visualizeTree(data, targetColumnName) {
   container.appendChild(svg)
 
   const mainGroup = document.createElementNS("http://www.w3.org/2000/svg", "g")
-  mainGroup.setAttribute("transform", "translate(20, 60)")
   svg.appendChild(mainGroup)
 
-  const hierarchy = createHierarchy(data, (node) => node.children)
+  const hierarchy = data
 
   const treeLayout = calculateTreeLayout(hierarchy)
 
@@ -838,8 +813,7 @@ function isSubPath(nodePath, decisionPath) {
 
 document.addEventListener("DOMContentLoaded", () => {
   let decisionTree = null
-  const testDataLines = []
-
+  
   document.getElementById("buildTree").addEventListener("click", () => {
     try {
       const trainingDataText = document.getElementById("trainingData").value
