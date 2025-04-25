@@ -1,0 +1,195 @@
+h1,
+h2,
+h3 {
+  padding: 10px;
+  color: #2c3e50;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
+}
+
+.panel {
+  flex: 1;
+  min-width: 300px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+button {
+  padding: 8px 15px;
+  background-color: #5bc0de;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #46b8da;
+}
+
+button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+#treeVisualization {
+  width: 100%;
+  min-height: 600px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 20px;
+  overflow: auto;
+}
+
+.controls {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.example-button {
+  background-color: #5cb85c;
+}
+
+.example-button:hover {
+  background-color: #4cae4c;
+}
+
+.error {
+  color: #d9534f;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #d9534f;
+  border-radius: 5px;
+  background-color: #f9f2f2;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="number"] {
+  width: 80px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.hidden {
+  display: none;
+}
+
+.tree-container {
+  width: 100%;
+  min-height: 500px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #fff;
+}
+
+.node--internal rect {
+  cursor: pointer;
+  fill: #e6f3ff;
+}
+
+.node--leaf rect {
+  fill: #e6ffe6;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+.highlighted-node rect {
+  fill: #ffcc99;
+}
+
+.highlighted-link {
+  stroke: #ff9933;
+  stroke-width: 3px;
+}
+
+#predictionResult {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #5bc0de;
+  border-radius: 5px;
+  background-color: #f4f8fa;
+}
+
+#predictionValue {
+  font-weight: bold;
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+#decisionPath {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.link-label {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.optimization-controls {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+#testDataSelect {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#addToTestData {
+  padding: 8px 12px;
+  background-color: #5bc0de;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#addToTestData:hover {
+  background-color: #e0e0e0;
+}

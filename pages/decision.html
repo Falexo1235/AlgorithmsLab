@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дерево решений</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="../styles/decision_tree.css">
+    <link rel="stylesheet" href="../styles/main.css">
+
+
+
+</head>
+<body>
+    <header>
+        <a href="../index.html">Демонстрация алгоритмов</a>
+    </header>
+    <h1>Дерево решений</h1>
+    
+    <div class="container">
+        <div class="panel">
+            <h2>Обучающие данные</h2>
+            <p>Вставьте данные в виде csv. Последняя колонка считается целевой</p>
+            <textarea id="trainingData" placeholder="x1,x2,x3,...,y
+1.2,3.4,5.6,...,class1
+2.3,4.5,6.7,...,class2
+..."></textarea>
+    
+    <button id="buildTree">Построить дерево</button>
+    <button id="loadExampleBtn" class="example-button">Загрузить пример</button>
+    
+    <div class="optimization-controls" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+        <h3>Оптимизация дерева</h3>
+        <div>
+            <label for="criticalError">Критическая ошибка (неоднородность):</label>
+            <input type="number" id="criticalError" min="0" max="1" step="0.01" value="0.1">
+        </div>
+        <button id="optimizeTree">Оптимизировать дерево</button>
+    </div>
+    
+    <div id="trainingError" class="error hidden"></div>
+</div>
+
+<div class="panel">
+    <h2>Тестовые данные</h2>
+    <p>Введите тестовую строку в формате csv для предсказания целевого столбца.</p>
+    <div style="display: flex; margin-bottom: 10px;">
+        <select id="testDataSelect" style="flex-grow: 1; margin-right: 10px;">
+            <option value="">Выбор тестовых данных для примера</option>
+            <option value="35,medium,yes,fair">age: 35, income: medium, student: yes, credit_rating: fair</option>
+            <option value="48,low,yes,fair">age: 48, income: low, student: yes, credit_rating: fair</option>
+            <option value="33,high,no,excellent">age: 33, income: high, student: no, credit_rating: excellent</option>
+        </select>
+        <button id="addToTestData">Добавить</button>
+    </div>
+    <textarea id="testData" placeholder="x1,x2,x3,...
+1.2,3.4,5.6,...
+2.3,4.5,6.7,...
+..."></textarea>
+    <button id="predictButton">Предсказать</button>
+    <div id="testError" class="error hidden"></div>
+    
+    <div id="predictionResult" class="hidden">
+        <h3>Результат предсказания</h3>
+        <div>
+            <strong>Предсказание: </strong>
+            <span id="predictionValue"></span>
+        </div>
+        <h4>Путь выборки:</h4>
+        <pre id="decisionPath"></pre>
+    </div>
+</div>
+    </div>
+    
+    <div class="panel">
+        <h2>Визуализация дерева</h2>
+        <div id="treeVisualization">
+            <p>Постройте дерево для визуализации</p>
+        </div>
+    </div>
+    <script src="../scripts/decision_tree.js"></script>
+
+</body>
+</html>
