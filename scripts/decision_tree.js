@@ -52,12 +52,9 @@ class DecisionTree {
 
     for (const attribute of this.attributeNames) {
 
-      let allNumeric = true
-
       for (const row of this.trainingData) {
         const value = row[attribute]
         if (isNaN(Number(value))) {
-          allNumeric = false
           break
         }
       }
