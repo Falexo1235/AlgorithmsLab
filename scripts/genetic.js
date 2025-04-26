@@ -1,6 +1,5 @@
 window.addEventListener("load", function () {
-  // Вспомогательные функции
-
+  
   function drawCities(col, rad) {
     for (let i = 0; i < coords.x.length; i++) {
       ctx.strokeStyle = col;
@@ -30,8 +29,7 @@ window.addEventListener("load", function () {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  // Отрисовка маршрута: выделяем «лучшие» рёбра
-  function refreshCanvas(population, goodW, goodOp, goodCol, badW, badOp, badCol) {
+    function refreshCanvas(population, goodW, goodOp, goodCol, badW, badOp, badCol) {
     ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
     drawCities(cityColor, cityRadius);
 
@@ -57,8 +55,7 @@ window.addEventListener("load", function () {
     }
   }
 
-  // Перерисовка холста
-  function updateCanvas() {
+    function updateCanvas() {
     ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
     drawCities(cityColor, cityRadius);
     for (let i = 0; i < coords.x.length; i++) {
@@ -68,8 +65,7 @@ window.addEventListener("load", function () {
     }
   }
 
-  // Подсчёт длины маршрута
-  function calcLength(route, matrix) {
+    function calcLength(route, matrix) {
     for (let i = 0; i < route.arr.length; i++) {
       if (i === 0 && route.arr.length !== 1)
         route.length += matrix[0][route.arr[0]];
@@ -80,8 +76,7 @@ window.addEventListener("load", function () {
     }
   }
 
-  // Глобальные настройки 
-  let defaultEdgeOpacity = 0.15,
+    let defaultEdgeOpacity = 0.15,
       defaultEdgeColor = "#999999",
       defaultEdgeWidth = 2;
   let cityRadius = 7,
@@ -103,16 +98,13 @@ window.addEventListener("load", function () {
   let coords = { x: [], y: [] };
   let cityCounter = 0;
 
-  // Элементы для вывода информации
-  let cityCountOutput = document.getElementById("vertexNumberId");
+    let cityCountOutput = document.getElementById("vertexNumberId");
   let bestRouteOutput = document.getElementById("bestPathId");
   let iterationOutput = document.getElementById("iterationId");
 
-  // Логика кнопки Начать/Найти путь/Прервать
-  document.getElementById("mainButton").onclick = function () {
+    document.getElementById("mainButton").onclick = function () {
     if (appState === "init" || appState === "finished") {
-      // Новый сеанс
-      cityCounter = 0;
+            cityCounter = 0;
       coords.x = [];
       coords.y = [];
       ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
@@ -122,13 +114,11 @@ window.addEventListener("load", function () {
       iterationOutput.textContent = "Итерация";
       appState = "building";
     } else if (appState === "building") {
-      // Если точек меньше двух, то поиск невозможен
-      if (coords.x.length < 2) {
+            if (coords.x.length < 2) {
         alert("Нужно как минимум 2 города для поиска маршрута!");
         return;
       }
-      // Запускаем генетический алгоритм
-      document.getElementById("mainButton").textContent = "Прервать";
+            document.getElementById("mainButton").textContent = "Прервать";
       appState = "searching";
 
       const popSize = Math.pow(coords.x.length, 2);
@@ -139,8 +129,7 @@ window.addEventListener("load", function () {
       const mutationMode = 2;
       const offspringCount = popSize;
 
-      // Формирование матрицы расстояний между городами
-      let matrix = new Array(coords.x.length);
+            let matrix = new Array(coords.x.length);
       for (let i = 0; i < coords.x.length; i++) {
         matrix[i] = new Array(coords.x.length);
         for (let j = 0; j < i; j++) {
@@ -181,15 +170,12 @@ window.addEventListener("load", function () {
 
         if (appState !== "searching" || iter > maxGenerations || noImproveCount > maxNoImprove) {
           clearInterval(gaTimerId);
-          // Завершение алгоритма
-          appState = "finished";
+                    appState = "finished";
           document.getElementById("mainButton").textContent = "Начать";
-          // Оставляем финальный маршрут на экране до следующего нового сеанса
-          return;
+                    return;
         }
 
-        // Генетический алгоритм: скрещивание, мутация, отбор
-        for (let count = 0; count < offspringCount; count += 2) {
+                for (let count = 0; count < offspringCount; count += 2) {
           let idx = randInt(0, population.length);
           let parent1 = { arr: population[idx].arr.slice(), length: population[idx].length };
           idx = randInt(0, population.length);
@@ -264,8 +250,7 @@ window.addEventListener("load", function () {
       }, 0);
 
     } else if (appState === "searching") {
-      // Если алгоритм запущен и нажата кнопка Прервать, то прерываем его
-      clearInterval(gaTimerId);
+            clearInterval(gaTimerId);
       appState = "init";
       document.getElementById("mainButton").textContent = "Начать";
       ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
@@ -278,8 +263,7 @@ window.addEventListener("load", function () {
     }
   };
 
-  // Настройки
-  document.getElementById("showSettingsModalWindow").onclick = function () {
+    document.getElementById("showSettingsModalWindow").onclick = function () {
     document.getElementById("maxCitiesNumberInputId").value = maxCities;
     document.getElementById("maxCitiesNumberOutputId").textContent = maxCities;
     document.getElementById("shadowSettings").style.display = "block";
@@ -310,10 +294,8 @@ window.addEventListener("load", function () {
     document.getElementById("shadowGraphics").style.display = "none";
   };
 
-  // Добавление городов
-  canvasEl.onmousedown = function (e) {
-    if (appState !== "building") return; // точки можно добавлять только в режиме построения
-    let xCoord = e.offsetX;
+    canvasEl.onmousedown = function (e) {
+    if (appState !== "building") return;     let xCoord = e.offsetX;
     let yCoord = e.offsetY;
     if (
       e.buttons === 1 &&

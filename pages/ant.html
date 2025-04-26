@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ant Algorithms</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/ant.css">
+</head>
+<body>
+
+<header>
+    <div id="headerButtonsContainer">
+        <button id="showGraphicsModalWindow">Графика</button>
+        <button id="showSettingsModalWindow">Настройки</button>
+    </div>
+    <button id="changeAlgorithm">Продвинутый алгоритм</button>
+</header>
+
+<div id="tspSection" class="algorithmSection active">
+    <h2>Стандартный алгоритм</h2>
+    <div id="buttonsContainer">
+        <button id="mainButton">Начать</button>
+    </div>
+    
+    <div id="outputDiv">
+        <span id="vertexNumberId">Вершины</span>
+        <span id="bestPathId">Длина</span>
+        <span id="iterationId">Итерация</span>
+    </div>
+    
+    <canvas width="800px" height="600px" id="myCanvas"></canvas>
+</div>
+
+<div id="colonySection" class="algorithmSection">
+    <h2>Продвинутый алгоритм</h2>
+    <div id="buttonsContainer">
+        <button id="large-food">Источник пищи</button>
+        <button id="walls">Стена</button>
+        <button id="ants">Муравейник</button>
+        <button id="erase">Удалить</button>
+        <button id="clear">Очистить</button>
+    </div>
+    
+    <div id="brushWidthDiv">
+        <label for="brushWidth">Размер кисти:</label>
+        <input type="range" min="5" max="50" value="20" id="brushWidth">
+    </div>
+    
+    <div id="foodNutritionDiv">
+        <label for="foodNutrition">Питательность источника:</label>
+        <input type="range" min="1" max="100" value="50" id="foodNutrition">
+        <output id="foodNutritionOutput">100</output>
+    </div>
+    
+    <canvas width="800px" height="600px" id="myCanvas2"></canvas>
+    <canvas width="800px" height="600px" id="extraCanvas1" style="display: none;"></canvas>
+    <canvas width="800px" height="600px" id="extraCanvas2" style="display: none;"></canvas>
+</div>
+
+<div id="shadowSettings" class="shadow">
+    <div id="settingsModalWindow" class="modalWindow">
+        <div id="closeSettingsModalWindow" class="divForCloseButton">
+            <button class="close" onclick="window.location.href='#'">Закрыть</button>
+        </div>
+        
+        <div id="tspSettings">
+            <h3>Настройки</h3>
+            <div class="divForModalWindows">
+                <label for="maxCitiesNumberInputId">Максимальное число городов</label>
+                <input id="maxCitiesNumberInputId" type="range" min="10" max="100" value="50"
+                       oninput="maxCitiesNumberOutputId.value = maxCitiesNumberInputId.value"/>
+                <output id="maxCitiesNumberOutputId">50</output>
+            </div>
+        </div>
+        
+        <div id="colonySettings">
+            <h3>Настройки</h3>
+            <div class="extraDivForModalWindows">
+                <label for="colonyInputId">Число муравьев</label>
+                <input type="range" id="colonyInputId" min="10" max="700" value="300" step="10"
+                       oninput="colonyOutputId.value = colonyInputId.value"/>
+                <output id="colonyOutputId">300</output>
+            </div>
+            
+            <div class="extraDivForModalWindows">
+                <label for="antsEyesRadiusInputId">Радиус зрения муравьев</label>
+                <input type="range" id="antsEyesRadiusInputId" min="5" max="100" value="10" step="5"
+                       oninput="antsEyesRadiusOutputId.value = antsEyesRadiusInputId.value"/>
+                <output id="antsEyesRadiusOutputId">10</output>
+            </div>
+            
+            <div class="extraDivForModalWindows">
+                <label for="mapPheromoneScaleInputId">Разрешение феромонов</label>
+                <input type="range" id="mapPheromoneScaleInputId" min="10" max="20" value="10" step="10"
+                       oninput="mapPheromoneScaleOutputId.value = mapPheromoneScaleInputId.value"/>
+                <output id="mapPheromoneScaleOutputId">10</output>
+            </div>
+            
+            <!-- <div class="extraDivForModalWindows">
+                <label for="mapPixelScaleInputId">Разрешение карты</label>
+                <input type="range" id="mapPixelScaleInputId" min="10" max="20" value="10" step="10"
+                       oninput="mapPixelScaleOutputId.value = mapPixelScaleInputId.value"/>
+                <output id="mapPixelScaleOutputId">10</output>
+            </div> -->
+            
+            <div class="extraDivForModalWindows">
+                <label for="infiniteFoodId">Бесконечные источники пищи</label>
+                <input type="checkbox" id="infiniteFoodId" />
+            </div>
+        </div>
+        
+        <div class="divForSaveButton">
+            <button class="save" id="saveSettings">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<div id="shadowGraphics" class="shadow">
+    <div id="graphicsModalWindow" class="modalWindow">
+        <div id="closeGraphicsModalWindow" class="divForCloseButton">
+            <button class="close" onclick="window.location.href='#'">Закрыть</button>
+        </div>
+        
+        <div id="tspGraphics">
+            <h3>Графика</h3>
+            <div class="divForModalWindows">
+                <label for="citiesColorId">Города</label>
+                <input id="citiesColorId" type="color" value="#000000"/>
+            </div>
+            
+            <div class="divForModalWindows">
+                <label for="otherEdgesColorId">Ребра</label>
+                <input id="otherEdgesColorId" type="color" value="#999999"/>
+            </div>
+            
+            <div class="divForModalWindows">
+                <label for="mainEdgesColorId">Текущий путь</label>
+                <input id="mainEdgesColorId" type="color" value="#ffff00"/>
+            </div>
+            
+            <div class="divForModalWindows">
+                <label for="resultEdgesColorId">Лучший путь</label>
+                <input id="resultEdgesColorId" type="color" value="#00ff00"/>
+            </div>
+            
+            <div class="divForModalWindows">
+                <label for="otherEdgesOpacityInputId">Прозрачность ребер</label>
+                <input id="otherEdgesOpacityInputId" type="range" min="0" max="1" value="0.15" step="0.05"
+                       oninput="otherEdgesOpacityOutputId.value = otherEdgesOpacityInputId.value"/>
+                <output id="otherEdgesOpacityOutputId">0.15</output>
+            </div>
+        </div>
+        
+        <div id="colonyGraphics">
+            <h3>Графика</h3>
+            <div class="extraDivForModalWindows">
+                <label for="anthillColorId">Цвет муравейника</label>
+                <input type="color" value="#ff4411" id="anthillColorId">
+            </div>
+            
+            <div class="extraDivForModalWindows">
+                <label for="antsColorId">Цвет муравьев</label>
+                <input type="color" value="#ff0000" id="antsColorId">
+            </div>
+            
+            <div class="extraDivForModalWindows">
+                <label for="antsRadiusInputId">Размер муравья</label>
+                <input type="range" id="antsRadiusInputId" min="1" max="20" value="4" step="1"
+                       oninput="antsRadiusOutputId.value = antsRadiusInputId.value"/>
+                <output id="antsRadiusOutputId">4</output>
+            </div>
+            
+            <div class="extraDivForModalWindows">
+                <label for="pheromonesDrawingModeInputId">Режим отображения феромонов</label>
+                <input type="range" id="pheromonesDrawingModeInputId" min="0" max="1" value="1" step="1"
+                       oninput="pheromonesDrawingModeOutputId.value = pheromonesDrawingModeInputId.value"/>
+                <output id="pheromonesDrawingModeOutputId">0</output>
+            </div>
+        </div>
+        
+        <div class="divForSaveButton">
+            <button class="save" id="saveGraphics">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="../scripts/ant-tsp-main.js"></script>
+<script type="module" src="../scripts/ant-main.js"></script>
+<script src="../scripts/backButton.js"></script>
+
+</body>
+</html> 

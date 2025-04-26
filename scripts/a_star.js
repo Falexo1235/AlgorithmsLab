@@ -1,41 +1,29 @@
 window.addEventListener("load", function() {
-  // ---------- Глобальные переменные ----------
-  let gridSize = 5;   // размер карты по умолчанию
-  let grid = [];      // двумерный массив для хранения состояния клеток
-  let cellSize = 50;  // размер клетки (в пикселях)
-  
+    let gridSize = 5;     let grid = [];        let cellSize = 50;    
   const canvas = document.getElementById("mapCanvas");
   const ctx = canvas.getContext("2d");
   const statusMessage = document.getElementById("statusMessage");
 
-  // Возможные состояния клетки: "empty", "obstacle", "start", "end", "path"
-  let mode = "obstacle"; // текущий режим редактирования
-  let startCell = null;
+    let mode = "obstacle";   let startCell = null;
   let endCell = null;
 
-  // Элементы управления
-  const gridSizeInput = document.getElementById("gridSizeInput");
+    const gridSizeInput = document.getElementById("gridSizeInput");
   const generateMapBtn = document.getElementById("generateMapBtn");
   const modeSelect = document.getElementById("modeSelect");
   const runAlgorithmBtn = document.getElementById("runAlgorithmBtn");
 
-  // ---------- Слушатели событий ----------
-  
-  // Изменение режима редактирования
-  modeSelect.addEventListener("change", function() {
+    
+    modeSelect.addEventListener("change", function() {
     mode = modeSelect.value;
   });
 
-  // Сгенерировать новую карту
-  generateMapBtn.addEventListener("click", function() {
+    generateMapBtn.addEventListener("click", function() {
     gridSize = parseInt(gridSizeInput.value);
-    // Подгоняем размер клетки под холст 500x500
-    cellSize = Math.floor(500 / gridSize);
+        cellSize = Math.floor(500 / gridSize);
     canvas.width = cellSize * gridSize;
     canvas.height = cellSize * gridSize;
 
-    // Инициализируем карту
-    grid = [];
+        grid = [];
     for (let y = 0; y < gridSize; y++) {
       let row = [];
       for (let x = 0; x < gridSize; x++) {
@@ -50,50 +38,37 @@ window.addEventListener("load", function() {
     drawGrid();
   });
 
-  // Клик по холсту для редактирования
-  canvas.addEventListener("click", function(event) {
+    canvas.addEventListener("click", function(event) {
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / cellSize);
     const y = Math.floor((event.clientY - rect.top) / cellSize);
     if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) return;
 
-    // В зависимости от режима, по-разному обрабатываем клик
-    if (mode === "obstacle") {
-      // Переключаем клетку на "obstacle" или обратно на "empty"
-      // ВАЖНО: Вы можете добавить логику, чтобы препятствия не стирали старт/конец, если это нужно
-      grid[y][x] = (grid[y][x] === "obstacle") ? "empty" : "obstacle";
-      // Если пользователь хочет запретить стирать старт/конец, можно добавить проверку:
-      // if (grid[y][x] === "start" || grid[y][x] === "end") { /* ... */ }
-      // но по вашему описанию нужно только запретить обратное — ставить start/end на препятствия.
-    } 
+        if (mode === "obstacle") {
+                  grid[y][x] = (grid[y][x] === "obstacle") ? "empty" : "obstacle";
+                      } 
     else if (mode === "start") {
-      // ВАЖНО: Запрещаем ставить начало, если здесь препятствие
-      if (grid[y][x] === "obstacle") {
+            if (grid[y][x] === "obstacle") {
         statusMessage.textContent = "Нельзя ставить начало на препятствие!";
         return; 
       }
-      // Очищаем старую стартовую клетку, если есть
-      if (startCell) {
+            if (startCell) {
         grid[startCell.y][startCell.x] = "empty";
       }
-      // Очищаем предыдущий маршрут
-      clearPathCells();
+            clearPathCells();
 
       grid[y][x] = "start";
       startCell = { x, y };
     } 
     else if (mode === "end") {
-      // ВАЖНО: Запрещаем ставить конец, если здесь препятствие
-      if (grid[y][x] === "obstacle") {
+            if (grid[y][x] === "obstacle") {
         statusMessage.textContent = "Нельзя ставить конец на препятствие!";
         return;
       }
-      // Очищаем старую конечную клетку, если есть
-      if (endCell) {
+            if (endCell) {
         grid[endCell.y][endCell.x] = "empty";
       }
-      // Очищаем предыдущий маршрут
-      clearPathCells();
+            clearPathCells();
 
       grid[y][x] = "end";
       endCell = { x, y };
@@ -102,15 +77,12 @@ window.addEventListener("load", function() {
     drawGrid();
   });
 
-  // Кнопка "Найти маршрут" запускает алгоритм
-  runAlgorithmBtn.addEventListener("click", function() {
+    runAlgorithmBtn.addEventListener("click", function() {
     runPathFinding();
   });
 
-  // ---------- Вспомогательные функции ----------
-
-  // Функция для отрисовки карты
-  function drawGrid() {
+  
+    function drawGrid() {
     for (let y = 0; y < gridSize; y++) {
       for (let x = 0; x < gridSize; x++) {
         let state = grid[y][x];
@@ -140,8 +112,7 @@ window.addEventListener("load", function() {
     }
   }
 
-  // Функция для удаления клеток с состоянием "path"
-  function clearPathCells() {
+    function clearPathCells() {
     for (let y = 0; y < gridSize; y++) {
       for (let x = 0; x < gridSize; x++) {
         if (grid[y][x] === "path") {
@@ -151,20 +122,17 @@ window.addEventListener("load", function() {
     }
   }
 
-  // Функция поиска пути (алгоритм A*)
-  function runPathFinding() {
+    function runPathFinding() {
     if (!startCell || !endCell) {
       statusMessage.textContent = "Установите начальную и конечную клетку!";
       return;
     }
-    // Стираем предыдущий маршрут
-    clearPathCells();
+        clearPathCells();
 
     let path = findPathAStar();
     if (path) {
       statusMessage.textContent = "Маршрут найден!";
-      // Отмечаем клетки маршрута (исключая старт и конец)
-      for (let cell of path) {
+            for (let cell of path) {
         if ((cell.x === startCell.x && cell.y === startCell.y) ||
             (cell.x === endCell.x && cell.y === endCell.y)) continue;
         grid[cell.y][cell.x] = "path";
@@ -175,18 +143,15 @@ window.addEventListener("load", function() {
     drawGrid();
   }
 
-  // Реализация алгоритма A* для поиска пути по сетке
-  function findPathAStar() {
-    // Функция для создания уникального ключа клетки
-    function cellKey(cell) {
+    function findPathAStar() {
+        function cellKey(cell) {
       return cell.x + "," + cell.y;
     }
 
     let openSet = [];
     let closedSet = new Set();
 
-    // Манхэттенская эвристика
-    function heuristic(a, b) {
+        function heuristic(a, b) {
       return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
@@ -202,13 +167,11 @@ window.addEventListener("load", function() {
     openSet.push(startNode);
 
     while (openSet.length > 0) {
-      // Узел с минимальным f
-      openSet.sort((a, b) => a.f - b.f);
+            openSet.sort((a, b) => a.f - b.f);
       let current = openSet.shift();
 
       if (current.x === endCell.x && current.y === endCell.y) {
-        // Путь найден – восстанавливаем маршрут
-        let path = [];
+                let path = [];
         let temp = current;
         while (temp) {
           path.push({ x: temp.x, y: temp.y });
@@ -218,8 +181,7 @@ window.addEventListener("load", function() {
       }
       closedSet.add(cellKey(current));
 
-      // Соседи (4 направления)
-      let directions = [
+            let directions = [
         { x: 0, y: -1 },
         { x: 0, y: 1 },
         { x: -1, y: 0 },
@@ -249,10 +211,8 @@ window.addEventListener("load", function() {
         }
       }
     }
-    // Путь не найден
-    return null;
+        return null;
   }
 
-  // При загрузке страницы генерируем карту по умолчанию
-  generateMapBtn.click();
+    generateMapBtn.click();
 });

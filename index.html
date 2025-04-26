@@ -1,21 +1,25 @@
 <!DOCTYPE html>
+<html>
 <head>
-  <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/main.css">
     <meta charset="UTF-8">
 </head>
 <body>
-  <header>
-    <a href="index.html">Демонстрация алгоритмов</a>
-  </header>
-  <div class="main-container">
-    
-      <div class="buttons">
-          <a class="button" href="pages/clustering.html">Кластеризация</a>
-          <a class="button" href="pages/a_star.html">A*</a>
-          <a class="button" href="pages/neural.html">Нейросеть</a>
-          <a class="button" href="pages/genetic.html">Генетический алгоритм</a>
-        </div>
-    </div>  
+<div class="main-content">
+    <span class="main-header">
+        Демонстрация алгоритмов
+    </span>
+    <div class="main-container">
+        <a class="button" href="pages/clustering.html">Кластеризация</a>
+        <a class="button" href="pages/a_star.html">A*</a>
+        <a class="button" href="pages/neural.html">Нейросеть</a>
+        <a class="button" href="pages/decision.html">Дерево решений</a>
+        <a class="button" href="pages/genetic.html">Генетический алгоритм</a>
+        <a class="button" href="pages/ant.html">Муравьиный алгоритм</a>
+    </div>
+</div>
+<canvas id="gradient-canvas" width="32" height="32"></canvas>
+<script src="scripts/gradient.js"></script>
 </body>
 </html>
 

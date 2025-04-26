@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Нейросеть</title>
@@ -8,21 +9,97 @@
     <link rel="stylesheet" href="../styles/main.css">
 
 </head>
+
 <body>
-<header>
-    <a href="../index.html">Демонстрация алгоритмов</a>
-</header>
+    <div class="neural-container">
 
-<div id="result">0</div>
-<div class="container">
-    <canvas id="gridCanvas"></canvas>
-    <canvas id="mainCanvas"></canvas>
-</div>
+        <div class="container">
+            <canvas id="gridCanvas"></canvas>
+            <canvas id="mainCanvas"></canvas>
+        </div>
 
-<button id="pen">Карандаш</button>
-<button id="eraser">Ластик</button>
-<button id="clear">Очистить холст</button>
+        <div class="confidence-container">
+            <div class="confidence-row">
+                <div class="digit-label">0:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-0"></div>
+                </div>
+                <div class="confidence-value" id="value-0">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">1:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-1"></div>
+                </div>
+                <div class="confidence-value" id="value-1">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">2:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-2"></div>
+                </div>
+                <div class="confidence-value" id="value-2">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">3:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-3"></div>
+                </div>
+                <div class="confidence-value" id="value-3">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">4:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-4"></div>
+                </div>
+                <div class="confidence-value" id="value-4">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">5:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-5"></div>
+                </div>
+                <div class="confidence-value" id="value-5">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">6:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-6"></div>
+                </div>
+                <div class="confidence-value" id="value-6">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">7:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-7"></div>
+                </div>
+                <div class="confidence-value" id="value-7">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">8:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-8"></div>
+                </div>
+                <div class="confidence-value" id="value-8">0%</div>
+            </div>
+            <div class="confidence-row">
+                <div class="digit-label">9:</div>
+                <div class="slider-container">
+                    <div class="slider-fill" id="confidence-9"></div>
+                </div>
+                <div class="confidence-value" id="value-9">0%</div>
+            </div>
 
-<script src="../scripts/neural.js" type="module"></script>
+            <div class="buttons-container">
+                <button id="pen">Карандаш</button>
+                <button id="eraser">Ластик</button>
+                <button id="clear">Очистить холст</button>
+            </div>
+        </div>
+
+    </div>
+    <script src="../scripts/neural.js" type="module"></script>
+    <script src="../scripts/backButton.js" type="module"></script>
 </body>
+
 </html>

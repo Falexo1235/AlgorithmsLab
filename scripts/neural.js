@@ -24,8 +24,7 @@ class CanvasPainter extends EventTarget
             imageSmoothingEnabled: false
         });
 
-        this.gridSize = 28;
-        this.cellSize = 15;
+        this.gridSize = 50;                 this.neuralInputSize = 28;          this.cellSize = 15;
         this.size = this.gridSize * this.cellSize;
         this.paintSize = 3;
         this.gridLineColor = "lightgray";
@@ -161,22 +160,19 @@ class CanvasPainter extends EventTarget
 
     getImageData()
     {
-        const grid = new Array(this.gridSize ** 2);
-
-        const canvasData = this.context.getImageData(0, 0, this.size, this.size).data;
-
-        const cellPixelCount = (this.cellSize ** 2) * 3; // 3, потому что не учитываем альфа канал
+                const originalGrid = new Array(this.gridSize);
+        for (let i = 0; i < this.gridSize; i++) {
+            originalGrid[i] = new Array(this.gridSize).fill(0);
+        }
         
-        for (let i = 0; i < this.gridSize; i++)
-        {
-            for (let j = 0; j < this.gridSize; j++)
-            {
+        const canvasData = this.context.getImageData(0, 0, this.size, this.size).data;
+        const cellPixelCount = (this.cellSize ** 2) * 3;         
+                for (let i = 0; i < this.gridSize; i++) {
+            for (let j = 0; j < this.gridSize; j++) {
                 let sum = 0;
 
-                for (let y = i * this.cellSize; y < (i + 1) * this.cellSize; y++)
-                {
-                    for (let x = j * this.cellSize; x < (j + 1) * this.cellSize; x++)
-                    {
+                for (let y = i * this.cellSize; y < (i + 1) * this.cellSize; y++) {
+                    for (let x = j * this.cellSize; x < (j + 1) * this.cellSize; x++) {
                         const index = (y * this.size + x) * 4;
                         
                         sum += canvasData[index];
@@ -186,19 +182,92 @@ class CanvasPainter extends EventTarget
                 }
 
                 const average = sum / cellPixelCount;
+                const value = 255 - average;
                 
-                grid[(this.gridSize * i) + j] = 255 - average;
+                originalGrid[i][j] = value;
             }
         }
         
-        return grid;
+                const scaledGrid = new Array(this.neuralInputSize);
+        for (let i = 0; i < this.neuralInputSize; i++) {
+            scaledGrid[i] = new Array(this.neuralInputSize).fill(0);
+        }
+        
+        const scaleRatio = this.gridSize / this.neuralInputSize;
+        
+        for (let i = 0; i < this.neuralInputSize; i++) {
+            for (let j = 0; j < this.neuralInputSize; j++) {
+                let sum = 0;
+                let count = 0;
+                
+                                const startY = Math.floor(i * scaleRatio);
+                const endY = Math.floor((i + 1) * scaleRatio);
+                const startX = Math.floor(j * scaleRatio);
+                const endX = Math.floor((j + 1) * scaleRatio);
+                
+                                for (let y = startY; y < endY; y++) {
+                    for (let x = startX; x < endX; x++) {
+                        if (y < this.gridSize && x < this.gridSize) {
+                            sum += originalGrid[y][x];
+                            count++;
+                        }
+                    }
+                }
+                
+                                const average = count > 0 ? sum / count : 0;
+                scaledGrid[i][j] = average;
+            }
+        }
+        
+                        let minX = this.neuralInputSize;
+        let minY = this.neuralInputSize;
+        let maxX = 0;
+        let maxY = 0;
+        let hasContent = false;
+        
+        for (let i = 0; i < this.neuralInputSize; i++) {
+            for (let j = 0; j < this.neuralInputSize; j++) {
+                if (scaledGrid[i][j] > 20) {                     hasContent = true;
+                    minX = Math.min(minX, j);
+                    minY = Math.min(minY, i);
+                    maxX = Math.max(maxX, j);
+                    maxY = Math.max(maxY, i);
+                }
+            }
+        }
+        
+                if (!hasContent) {
+            return new Array(this.neuralInputSize * this.neuralInputSize).fill(0);
+        }
+        
+                const width = maxX - minX + 1;
+        const height = maxY - minY + 1;
+        const centerX = Math.floor(this.neuralInputSize / 2);
+        const centerY = Math.floor(this.neuralInputSize / 2);
+        
+        const offsetX = centerX - Math.floor((minX + maxX) / 2);
+        const offsetY = centerY - Math.floor((minY + maxY) / 2);
+        
+                const finalGrid = new Array(this.neuralInputSize * this.neuralInputSize).fill(0);
+        
+        for (let i = minY; i <= maxY; i++) {
+            for (let j = minX; j <= maxX; j++) {
+                const newY = i + offsetY;
+                const newX = j + offsetX;
+                
+                                if (newY >= 0 && newY < this.neuralInputSize && newX >= 0 && newX < this.neuralInputSize) {
+                    finalGrid[(this.neuralInputSize * newY) + newX] = scaledGrid[i][j];
+                }
+            }
+        }
+        
+        return finalGrid;
     }
 }
 
 const painter = new CanvasPainter();
 
-const inputNodes = 768;
-const hiddenNodes = Math.round(inputNodes / 20);
+const inputNodes = 784; const hiddenNodes = Math.round(inputNodes / 20);
 const outputNodes = 10;
 
 const network = new NeuralNetwork(inputNodes, hiddenNodes, outputNodes);
@@ -208,6 +277,13 @@ await network.importWeights("../data/weights.json");
 painter.addEventListener("updated", () =>
 {
     const result = network.query(painter.getImageData());
-    document.getElementById("result").innerText = result.indexOf(Math.max(...result))
+    
+        result.forEach((confidence, digit) => {
+        const percentage = Math.round(confidence * 100);
+        const sliderFill = document.getElementById(`confidence-${digit}`);
+        const valueDisplay = document.getElementById(`value-${digit}`);
+        
+        sliderFill.style.width = `${percentage}%`;
+        valueDisplay.innerText = `${percentage}%`;
+    });
 });
-
